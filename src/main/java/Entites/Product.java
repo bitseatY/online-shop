@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.Map;
 
 @Entity
+@Table(name="products")
 
 public class Product {
     @Id
@@ -19,6 +20,7 @@ public class Product {
     @JoinColumn(name="cat_id")
     private Category category;
     private int quantity;
+    private String status;
     private String qtyUnit;
     @ElementCollection
     @CollectionTable(name = "attributes",joinColumns=@JoinColumn(name="pro_id"))
@@ -34,6 +36,15 @@ public class Product {
         this.category=category;
         this.quantity=quantity;
         this.attributes=attributes;
+        status="active";
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStatus() {
+        return status;
     }
 
     public Map<String, String> getAttributes() {

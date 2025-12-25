@@ -1,25 +1,27 @@
 package Entites;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 import java.math.BigDecimal;
 
 @Entity
-public class OrderItems {
+@Table(name="order_items")
+public class OrderItem {
     @ManyToOne(optional = false)
     @JoinColumn(name="order_id")
     private Order order;
-    private  String product_name;
-    private BigDecimal price;
+    @JoinColumn(name="pro_id")
+    private Product product;
     private int quantity;
-    public OrderItems(Order order,String product_name,BigDecimal price,int quantity){
+    private BigDecimal priceAtAdd;
+    public OrderItem(Order order, Product product, int quantity,BigDecimal priceAtAdd){
         this.order=order;
-        this.product_name=product_name;
-        this.price=price;
+        this.product=product;
         this.quantity=quantity;
+        this.priceAtAdd=priceAtAdd;
     }
 
     public int getQuantity() {
@@ -30,12 +32,19 @@ public class OrderItems {
         this.quantity = quantity;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public Product getProduct() {
+        return product;
+    }
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
-    public BigDecimal getPrice() {
-        return price;
+    public void setPriceAtAdd(BigDecimal priceAtAdd) {
+        this.priceAtAdd = priceAtAdd;
+    }
+
+    public BigDecimal getPriceAtAdd() {
+        return priceAtAdd;
     }
 
     public Order getOrder() {
@@ -46,11 +55,5 @@ public class OrderItems {
         this.order = order;
     }
 
-    public String getProduct_name() {
-        return product_name;
-    }
 
-    public void setProduct_name(String product_name) {
-        this.product_name = product_name;
-    }
 }

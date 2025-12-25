@@ -7,17 +7,20 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
+@Table(name="orders")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @ManyToOne
     @JoinColumn(name="user_id")
     private User user;
     private BigDecimal totalAmount;
     private String status;
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<OrderItems> items;
+    private List<OrderItem> items;
     private LocalDate createdAt;
+
     public Order(User user,BigDecimal totalAmount,String status){
         createdAt=LocalDate.now();
         this.totalAmount=totalAmount;
@@ -45,6 +48,7 @@ public class Order {
         return id;
     }
 
+
     public BigDecimal getTotalAmount() {
         return totalAmount;
     }
@@ -59,5 +63,13 @@ public class Order {
 
     public void setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public List<OrderItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<OrderItem> items) {
+        this.items = items;
     }
 }

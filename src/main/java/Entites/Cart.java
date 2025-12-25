@@ -1,17 +1,16 @@
 package Entites;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 
 import java.util.List;
 
 @Entity
+@Table(name="carts")
 public class Cart {
     private long id;
     @OneToMany(cascade = CascadeType.ALL,mappedBy ="cart",orphanRemoval = true)
     List<CartItem> items;
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
     private String status;
