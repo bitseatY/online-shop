@@ -1,9 +1,15 @@
-package Entites;
+package com.ecommerce.demo.Entites;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name="categories")
+@NoArgsConstructor
+@Getter
+@Setter
 
 public class Category {
     @Id
@@ -14,15 +20,5 @@ public class Category {
         this.name=name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
-    public String getName() {
-        return name;
-    }
-
-    public long getId() {
-        return id;
-    }
 }
