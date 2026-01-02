@@ -5,6 +5,8 @@ import com.ecommerce.demo.Repositories.UserRepository;
 import com.ecommerce.demo.Security.CustomUserDetailsService;
 import com.ecommerce.demo.Security.JwtUtil;
 import com.ecommerce.demo.Security.SecurityBeans;
+import com.ecommerce.demo.dtos.RegistrationDto;
+import jakarta.validation.Valid;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 @RestController
@@ -32,17 +36,22 @@ public class AuthController {
      }
 
      @PostMapping("/register")
-     public String registerUser(@RequestBody LoginRequest request){
+     public String registerUser(@Valid @RequestBody RegistrationDto request){
          User user=new User();
-         user.setUsername(request.username());
-         user.setEmail("halhf");
-         user.setPassword(securityBeans.passwordEncoder().encode(request.password()));
-         user.setRoles(Set.of("admin"));
+         user.setUsername(request.getUsername());
+         user.setEmail(request.getEmail());
+         user.setPassword(securityBeans.passwordEncoder().encode(request.getPassword()));
+         if(request.getRoles()==null){
+             user.setRoles(Set.of("User"));
+         }
+         else {
+             user.setRoles(new HashSet<>(Arrays.asList(request.getRoles())));
+         }
          userRepository.save(user);
          return "user successfully registered.";
      }
      @PostMapping("/login")
-     public String login(LoginRequest loginRequest){
+     public String login(@RequestBody LoginRequest loginRequest){
         authManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password()));
         return jwtUtil.generateToken(detailService.loadUserByUsername(loginRequest.username()));
      }
