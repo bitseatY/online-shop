@@ -1,9 +1,12 @@
-package com.ecommerce.demo.Repositories;
+package com.ecommerce.demo.repositories;
 
-import com.ecommerce.demo.Entites.Product;
+import com.ecommerce.demo.entites.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface ProductRepository extends JpaRepository<Product,Long> {
+    Optional<Product> findById(long id);
 }

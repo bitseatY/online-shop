@@ -1,0 +1,20 @@
+package com.ecommerce.demo.dtos;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
+@AllArgsConstructor
+public class LoginRequest {
+    @NotBlank
+    @Size(min=10)
+    private String username;
+    @NotBlank
+    @Size(min=10)
+    private String password;
+
+}

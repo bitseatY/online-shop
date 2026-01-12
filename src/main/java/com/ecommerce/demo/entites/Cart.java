@@ -1,4 +1,4 @@
-package com.ecommerce.demo.Entites;
+package com.ecommerce.demo.entites;
 
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;

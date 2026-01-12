@@ -1,4 +1,4 @@
-package com.ecommerce.demo.Entites;
+package com.ecommerce.demo.entites;
 
 import jakarta.persistence.*;
 
@@ -20,13 +20,13 @@ public class CartItem {
       @OneToOne(optional = false)
       @JoinColumn(name="pro_id")
       private Product product;
-      private  int  qty;
+      private  int  quantity;
       private BigDecimal priceAtAdd;
-      public CartItem(Cart cart,Product product,int qty,BigDecimal priceAtAdd){
+      public CartItem(Cart cart,Product product,int quantity){
           this.cart=cart;
           this.product=product;
-          this.qty=qty;
-          this.priceAtAdd=priceAtAdd;
+          this.quantity=quantity;
+          priceAtAdd=product.getPrice();
       }
 
 

@@ -1,4 +1,4 @@
-package com.ecommerce.demo.Entites;
+package com.ecommerce.demo.entites;
 
 
 import jakarta.persistence.*;
@@ -25,23 +25,32 @@ public class Product {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="cat_id")
     private Category category;
-    private int quantity;
+    //quantity that is available for purchase at the moment
+    private int stock;
+    //quantity that is in the process of being sold ,if process fails it returns back to stock
+    private  int reserved;
+    //measurement unit like kilo, lb, ...
+    private String quantityUnit;
+    //available, sold-out , banned
     private String status;
     @ElementCollection
     @CollectionTable(name = "attributes",joinColumns=@JoinColumn(name="pro_id"))
     @MapKeyColumn(name="att_key")
     @Column(name="att_value")
+    //characters of product like color,size , material, country imported .....
     private Map<String ,String> attributes;
 
 
-    public Product(String name,String description,BigDecimal price,Category category,int quantity,Map<String,String> attributes){
+    public Product(String name,String description,BigDecimal price,Category category,int stock,String quantityUnit,Map<String,String> attributes){
         this.name=name;
         this.description=description;
         this.price=price;
         this.category=category;
-        this.quantity=quantity;
+        this.stock =stock;
+        this.reserved=0;
         this.attributes=attributes;
-        status="active";
+        this.quantityUnit=quantityUnit;
+        status="available";
     }
 
 }

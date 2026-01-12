@@ -1,4 +1,4 @@
-package com.ecommerce.demo.Security;
+package com.ecommerce.demo.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
