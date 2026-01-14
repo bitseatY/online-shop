@@ -1,5 +1,6 @@
 package com.ecommerce.demo.exceptions;
 
+import com.ecommerce.demo.repositories.ProductRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +37,23 @@ public class GlobalExceptionHandler {
     public  ResponseEntity<ApiError> handleUserNotFoundException(UserNotFoundException exception){
         return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiError("user not found"));
     }
+    @ExceptionHandler(ProductNotFoundException.class)
+    public  ResponseEntity<ApiError> handleUserNotFoundException(ProductNotFoundException exception){
+        return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiError("product not found"));
+    }
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public  ResponseEntity<ApiError> handleUserNotFoundException(CategoryNotFoundException exception){
+        return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiError("category  not found"));
+    }
+    @ExceptionHandler(InvalidArgumentException.class)
+    public ResponseEntity<ApiError> handleInvalidArgumentException(InvalidArgumentException exception){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiError("invalid argument."));
+    }
+    @ExceptionHandler(InsufficientStockException.class)
+    public ResponseEntity<ApiError> handleInsufficientStockException(InsufficientStockException exception){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiError("not enough products left in stock."));
+    }
+
 
 
 

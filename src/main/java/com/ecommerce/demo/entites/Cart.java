@@ -20,6 +20,7 @@ public class Cart {
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id")
     private User user;
+    //ACTIVE, CHECKED-OUT, ABANDONED, EXPIRED
     private String status;
     public Cart(User user){
         this.user=user;

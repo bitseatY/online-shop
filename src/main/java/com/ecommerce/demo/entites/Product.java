@@ -20,6 +20,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
+    private String slug;
     private String description;
     private BigDecimal price;
     @ManyToOne(fetch = FetchType.EAGER)
@@ -43,6 +44,9 @@ public class Product {
 
     public Product(String name,String description,BigDecimal price,Category category,int stock,String quantityUnit,Map<String,String> attributes){
         this.name=name;
+        slug=name.toLowerCase().trim()
+                .replaceAll("[^a-z0-9\\s-]", "")
+                .replaceAll("\\s+", "-");
         this.description=description;
         this.price=price;
         this.category=category;

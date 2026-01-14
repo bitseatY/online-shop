@@ -11,10 +11,10 @@ import lombok.Setter;
 @AllArgsConstructor
 public class LoginRequest {
     @NotBlank
-    @Size(min=10)
+    @Size(min=5)
     private String username;
     @NotBlank
-    @Size(min=10)
+    @Size(min=5)
     private String password;
 
 }
