@@ -1,9 +1,11 @@
 package com.ecommerce.demo.dtos;
 
+import com.ecommerce.demo.entites.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -13,5 +15,5 @@ public class UserResponse {
     private long id;
     private String email;
     private String name;
-    private Set<String> roles;
+    private List<String> roles;
 }

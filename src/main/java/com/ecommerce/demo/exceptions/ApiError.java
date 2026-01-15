@@ -7,12 +7,17 @@ import java.util.Map;
 
 @Getter
 @Setter
-@AllArgsConstructor
-public class ApiError extends RuntimeException{
+
+public class ApiError {
     private String message;
-    private Map<String,String> errors;
     public ApiError(String message){
-        super(message);
+
+        this.message=message;
+
     }
 
+    @Override
+    public String toString() {
+        return "message:"+message;
+    }
 }

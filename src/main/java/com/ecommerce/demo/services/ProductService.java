@@ -1,10 +1,9 @@
 package com.ecommerce.demo.services;
 
-import com.ecommerce.demo.dtos.ProductPurchase;
 import com.ecommerce.demo.dtos.ProductSummaryDto;
 import com.ecommerce.demo.entites.Category;
 import com.ecommerce.demo.entites.Product;
-import com.ecommerce.demo.exceptions.CategoryNotFoundException;
+import com.ecommerce.demo.exceptions.ResourceNotFoundException;
 import com.ecommerce.demo.repositories.CategoryRepository;
 import com.ecommerce.demo.repositories.ProductRepository;
 import org.springframework.data.domain.Page;
@@ -23,10 +22,10 @@ public class ProductService {
         this.categoryRepository=categoryRepository;
     }
     public List<ProductSummaryDto>  searchProductsByCategory(String slug, Pageable pageable){
-        Category category=categoryRepository.findBySlug(slug).orElseThrow(CategoryNotFoundException::new);
+        Category category=categoryRepository.findBySlug(slug).orElseThrow(()->new ResourceNotFoundException("category not found "));
         List<Product> products=productRepository.findByCategoryId(category.getId(),pageable);
         if(products.isEmpty()){
-            throw new CategoryNotFoundException();
+            throw new ResourceNotFoundException("category not found ");
         }
         return   products.stream().map(product -> new ProductSummaryDto(product.getId(),product.getName(),
                                                           product.getSlug(),product.getPrice())).toList();

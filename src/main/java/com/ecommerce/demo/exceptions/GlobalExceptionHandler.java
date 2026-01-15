@@ -1,6 +1,5 @@
 package com.ecommerce.demo.exceptions;
 
-import com.ecommerce.demo.repositories.ProductRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.locks.ReentrantLock;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -22,37 +20,31 @@ public class GlobalExceptionHandler {
 
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public  ResponseEntity<ApiError> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception){
+    public  ResponseEntity<MethodArgErrors> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception){
         Map<String,String> errors=new HashMap<>();
         exception.getBindingResult().getFieldErrors().
                 forEach(error->errors.put(error.getField(),error.getDefaultMessage()));
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiError("validation failed",errors));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MethodArgErrors("validation fails",errors));
     }
     @ExceptionHandler(DataIntegrityViolationException.class)
     public  ResponseEntity<ApiError> handleDataIntegrityViolationException(DataIntegrityViolationException exception){
         return  ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiError("simultaneous registration happening with identical email"));
     }
-    @ExceptionHandler(UserNotFoundException.class)
-    public  ResponseEntity<ApiError> handleUserNotFoundException(UserNotFoundException exception){
-        return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiError("user not found"));
-    }
-    @ExceptionHandler(ProductNotFoundException.class)
-    public  ResponseEntity<ApiError> handleUserNotFoundException(ProductNotFoundException exception){
-        return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiError("product not found"));
-    }
-    @ExceptionHandler(CategoryNotFoundException.class)
-    public  ResponseEntity<ApiError> handleUserNotFoundException(CategoryNotFoundException exception){
-        return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiError("category  not found"));
-    }
     @ExceptionHandler(InvalidArgumentException.class)
     public ResponseEntity<ApiError> handleInvalidArgumentException(InvalidArgumentException exception){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiError("invalid argument."));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiError(exception.getMessage()));
     }
-    @ExceptionHandler(InsufficientStockException.class)
-    public ResponseEntity<ApiError> handleInsufficientStockException(InsufficientStockException exception){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiError("not enough products left in stock."));
+    @ExceptionHandler(LimitedResourceException.class)
+    public ResponseEntity<ApiError> handleLimitedResourceException(LimitedResourceException exception){
+        ApiError error=new ApiError(exception.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiError> handleInsufficientStockException(ResourceNotFoundException exception){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiError(exception.getMessage()));
+    }
+
 
 
 

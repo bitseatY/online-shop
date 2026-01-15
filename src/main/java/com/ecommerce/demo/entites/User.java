@@ -1,6 +1,7 @@
 package com.ecommerce.demo.entites;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import java.util.Set;
 @Setter
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,16 +22,15 @@ public class User {
     private String username;
     private String password;
     private String email;
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name="user_roles",joinColumns = @JoinColumn(name="user_id"))
-    @Column(name="role")
-    private Set<String> roles=new HashSet<>();
-    private User(String username, String password, String email, Set<String> roles){
-        this.email=email;
-        this.roles=roles;
-        this.password=password;
-        this.username = username;
-    }
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+
+    private Set<Role> roles=new HashSet<>();
+
 
 
 

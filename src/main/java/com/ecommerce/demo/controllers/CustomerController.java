@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 
 @RestController
-@RequestMapping("api/customer")
+@RequestMapping("/api/customer")
 public class CustomerController {
     private CustomerService customerService;
     private  JwtUtil jwtUtil;
@@ -28,7 +28,7 @@ public class CustomerController {
     }
 
     @PostMapping("/addtocart/{slug}/{quantity}")
-    public ResponseEntity<CartItemsSummary> addToCart(@PathVariable("slug") String slug, int quantity, @AuthenticationPrincipal CustomUserDetails user){
+    public ResponseEntity<CartItemsSummary> addToCart(@PathVariable("slug") String slug,@PathVariable("quantity") int quantity, @AuthenticationPrincipal CustomUserDetails user){
         return  ResponseEntity.ok(customerService.addToCart(slug,quantity,user.getId()));
     }
 

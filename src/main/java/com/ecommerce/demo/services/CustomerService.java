@@ -29,10 +29,11 @@ public class CustomerService {
         this.userRepository=userRepository;
     }
 
+   //no stock reduction happens here
     public CartItemsSummary addToCart(String slug, int quantity, long userId){
           if(quantity<1)
               throw new InvalidArgumentException("quantity can't be less than 1");
-          User user=userRepository.findById(userId).orElseThrow(()->new UserNotFoundException());
+          User user=userRepository.findById(userId).orElseThrow(()->new ResourceNotFoundException("user not found"));
           Cart cart=cartRepository.findCart(userId,"ACTIVE");
           //if no active cart is present for user, create one
           if(cart==null){
@@ -40,9 +41,9 @@ public class CustomerService {
               cart.setStatus("ACTIVE");
               cartRepository.save(cart);
           }
-          Product product=productRepository.findBySlug(slug).orElseThrow(()->new ProductNotFoundException());
+          Product product=productRepository.findBySlug(slug).orElseThrow(()->new ResourceNotFoundException("product not found"));
           if(product.getStock()<quantity){
-              throw new InsufficientStockException();
+              throw new LimitedResourceException("insufficient stock");
           }
           //if item is already present just increase quantity, do not save it as a new item
           CartItem cartItem=new CartItem(cart,product,quantity);
