@@ -20,10 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.Arrays;
@@ -46,5 +43,10 @@ public class AuthController {
      public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest){
         return    ResponseEntity.status(HttpStatus.OK).body(authService.login(loginRequest));
      }
+
+     @GetMapping("/health")
+    public String health() {
+        return "OK";
+    }
 
 }
