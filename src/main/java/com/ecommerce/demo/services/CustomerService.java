@@ -1,19 +1,15 @@
 package com.ecommerce.demo.services;
 
-import com.ecommerce.demo.dtos.CartItemsSummary;
-import com.ecommerce.demo.entites.Cart;
-import com.ecommerce.demo.entites.CartItem;
-import com.ecommerce.demo.entites.Product;
-import com.ecommerce.demo.entites.User;
+import com.ecommerce.demo.dtos.CategorySummary;
+import com.ecommerce.demo.dtos.ProductSummary;
+import com.ecommerce.demo.entites.*;
 import com.ecommerce.demo.exceptions.*;
-import com.ecommerce.demo.repositories.CartItemRepository;
-import com.ecommerce.demo.repositories.CartRepository;
-import com.ecommerce.demo.repositories.ProductRepository;
-import com.ecommerce.demo.repositories.UserRepository;
+import com.ecommerce.demo.repositories.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-
-import java.math.BigDecimal;
 
 @Service
 public class CustomerService {
@@ -21,47 +17,31 @@ public class CustomerService {
     private CartRepository cartRepository;
     private CartItemRepository cartItemRepository;
     private UserRepository userRepository;
+    private CategoryRepository categoryRepository;
     public CustomerService(ProductRepository productRepository, CartRepository cartRepository,
-                           CartItemRepository cartItemRepository, UserRepository userRepository){
+                           CartItemRepository cartItemRepository, UserRepository userRepository,
+                           CategoryRepository categoryRepository){
         this.productRepository=productRepository;
         this.cartRepository=cartRepository;
         this.cartItemRepository=cartItemRepository;
         this.userRepository=userRepository;
+        this.categoryRepository=categoryRepository;
     }
-
-   //no stock reduction happens here
-    public CartItemsSummary addToCart(String slug, int quantity, long userId){
-          if(quantity<1)
-              throw new InvalidArgumentException("quantity can't be less than 1");
-          User user=userRepository.findById(userId).orElseThrow(()->new ResourceNotFoundException("user not found"));
-          Cart cart=cartRepository.findCart(userId,"ACTIVE");
-          //if no active cart is present for user, create one
-          if(cart==null){
-              cart=new Cart(user);
-              cart.setStatus("ACTIVE");
-              cartRepository.save(cart);
-          }
-          Product product=productRepository.findBySlug(slug).orElseThrow(()->new ResourceNotFoundException("product not found"));
-          if(product.getStock()<quantity){
-              throw new LimitedResourceException("insufficient stock");
-          }
-          //if item is already present just increase quantity, do not save it as a new item
-          CartItem cartItem=new CartItem(cart,product,quantity);
-          boolean isItemPresent=false;
-          for(CartItem item:cart.getItems()){
-              if(item.getProduct().equals(cartItem.getProduct())){
-                  item.setQuantity(item.getQuantity()+cartItem.getQuantity());
-                  isItemPresent=true;
-              }
-          }
-          if(!isItemPresent){
-              cartItemRepository.save(cartItem);
-              cart.getItems().add(cartItem);
-          }
-         return  new CartItemsSummary(cartItem.getId(),cartItem.getProduct().getName(),cartItem.getQuantity(),
-                                  cartItem.getPriceAtAdd(),cartItem.getPriceAtAdd().multiply(BigDecimal.valueOf(cartItem.getQuantity())));
-
-
+    //public fetch for categories
+    public Page<CategorySummary> fetchAllCategories(){
+            Pageable pageable= PageRequest.of(0,10, Sort.by("name").ascending());
+            Page<Category> categories=categoryRepository.findAll(pageable);
+            return  categories.map(category -> new CategorySummary(category.getSlug(),category.getDescription()));
     }
+    //public fetch for products
+    public Page<ProductSummary> fetchAllProducts(String categorySlug){
+        Category category=categoryRepository.findBySlug(categorySlug).orElseThrow(()->new ResourceNotFoundException("category not found"));
+        Pageable pageable= PageRequest.of(0,10, Sort.by("name").ascending());
+        Page<Product> products=productRepository.findByCategory(category,pageable);
+        return  products.map(product -> new ProductSummary( product.getSlug(), product.getDescription()));
+    }
+    //public fetch for product variants
+
+
 
 }

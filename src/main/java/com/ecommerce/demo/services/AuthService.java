@@ -36,7 +36,7 @@ public class AuthService {
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setPassword(securityBeans.passwordEncoder().encode(request.getPassword()));
-        user.setRoles(Set.of(roleRepository.findByName("CUSTOMER")));
+        user.setRoles(Set.of(roleRepository.findByName("ROLE_CUSTOMER").orElseThrow(()->new ResourceNotFoundException("role not found"))));
         userRepository.save(user);
         return  new RegistrationResponse("Account created successfully.",
                                             new UserResponse(user.getId(), user.getEmail(), user.getUsername(),

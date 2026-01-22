@@ -22,39 +22,36 @@ public class Product {
     private String name;
     private String slug;
     private String description;
-    private BigDecimal price;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="cat_id")
     private Category category;
-    //quantity that is available for purchase at the moment
+    private BigDecimal price;
+    //quantity of variant in the store
     private int stock;
-    //quantity that is in the process of being sold ,if process fails it returns back to stock
-    private  int reserved;
     //measurement unit like kilo, lb, ...
     private String quantityUnit;
-    //available, sold-out , banned
+    //ACTIVE meaning it is ready to be sold and INACTIVE meaning  either variant is in someone's order or
+    //variant is not available at the moment
     private String status;
     @ElementCollection
-    @CollectionTable(name = "attributes",joinColumns=@JoinColumn(name="pro_id"))
+    @CollectionTable(name = "attributes",joinColumns=@JoinColumn(name="variant_id"))
     @MapKeyColumn(name="att_key")
     @Column(name="att_value")
     //characters of product like color,size , material, country imported .....
     private Map<String ,String> attributes;
 
 
-    public Product(String name,String description,BigDecimal price,Category category,int stock,String quantityUnit,Map<String,String> attributes){
+
+
+
+
+    public Product(String name,String description,Category category){
         this.name=name;
         slug=name.toLowerCase().trim()
                 .replaceAll("[^a-z0-9\\s-]", "")
                 .replaceAll("\\s+", "-");
         this.description=description;
-        this.price=price;
         this.category=category;
-        this.stock =stock;
-        this.reserved=0;
-        this.attributes=attributes;
-        this.quantityUnit=quantityUnit;
-        status="available";
     }
 
 }

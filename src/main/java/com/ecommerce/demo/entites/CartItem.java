@@ -26,7 +26,7 @@ public class CartItem {
           this.cart=cart;
           this.product=product;
           this.quantity=quantity;
-          priceAtAdd=product.getPrice();
+//          priceAtAdd=product.getPrice();
       }
 
 

@@ -27,10 +27,6 @@ public class CustomerController {
         this.detailsService=detailsService;
     }
 
-    @PostMapping("/addtocart/{slug}/{quantity}")
-    public ResponseEntity<CartItemsSummary> addToCart(@PathVariable("slug") String slug,@PathVariable("quantity") int quantity, @AuthenticationPrincipal CustomUserDetails user){
-        return  ResponseEntity.ok(customerService.addToCart(slug,quantity,user.getId()));
-    }
 
 
 }
